@@ -12,7 +12,7 @@ module Cocoon
     # - *f* : the form this link should be placed in
     # - *html_options*:  html options to be passed to link_to (see <tt>link_to</tt>)
     # - *&block*:        the output of the block will be show in the link, see <tt>link_to</tt>
-    
+
     def link_to_remove_association(*args, &block)
       if block_given?
         f            = args.first
@@ -24,9 +24,13 @@ module Cocoon
         f            = args[1]
         html_options = args[2] || {}
 
+        render_options = html_options.delete(:render_options) || {}
+        hidden_field = render_options.delete(:delete_name) || f.object_name
+
         is_dynamic = f.object.new_record?
         html_options[:class] = [html_options[:class], "remove_fields #{is_dynamic ? 'dynamic' : 'existing'}"].compact.join(' ')
-        hidden_field_tag("#{f.object_name}[_destroy]") + link_to(name, '#', html_options)
+
+        hidden_field_tag("#{hidden_field}[_destroy]", nil, render_options) + link_to(name, '#', html_options)
       end
     end
 

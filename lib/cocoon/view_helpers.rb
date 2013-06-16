@@ -24,7 +24,8 @@ module Cocoon
         f            = args[1]
         html_options = args[2] || {}
 
-        render_options = html_options.delete(:render_options) || {}
+        render_options = html_options.delete(:render_options)
+        render_options ||= {}
         hidden_field = render_options.delete(:delete_name) || f.object_name
 
         is_dynamic = f.object.new_record?
